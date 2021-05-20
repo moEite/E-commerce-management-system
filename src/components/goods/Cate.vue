@@ -59,7 +59,11 @@
             @click="editCate(scope.row.cat_id)"
             >编辑</el-button
           >
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteCate(scope.row.cat_id)"
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            @click="deleteCate(scope.row.cat_id)"
             >删除</el-button
           >
         </template>
@@ -300,27 +304,40 @@ export default {
           return;
         }
         const { data: res } = await this.$http.put(
-          "categories/" + this.editCateForm.cat_id,{cat_name:this.editCateForm.cat_name}
+          "categories/" + this.editCateForm.cat_id,
+          { cat_name: this.editCateForm.cat_name }
         );
         console.log(res);
         if (res.meta.status !== 200) {
-          return this.$message.error('更新分类名称失败！')
+          return this.$message.error("更新分类名称失败！");
         }
-        this.$message.success('更新分类名称成功！')
-        this.editCateForm = res.data
-        this.editCateDialogVisible = false
-        this.getCateList()
+        this.$message.success("更新分类名称成功！");
+        this.editCateForm = res.data;
+        this.editCateDialogVisible = false;
+        this.getCateList();
       });
     },
     // 点击按钮，删除分类
     async deleteCate(id) {
-      const { data:res } = await this.$http.delete('categories/' + id)
-      if (res.meta.status !== 200) {
-        return this.$message.error('删除分类失败！')
+      const confirmResult = await this.$confirm(
+        "此操作将永久删除该参数, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).catch((err) => err);
+      if (confirmResult !== "confirm") {
+        return this.$message.info("已取消删除！");
       }
-      this.$message.success('删除分类成功！')
-      this.getCateList()
-    }
+      const { data: res } = await this.$http.delete("categories/" + id);
+      if (res.meta.status !== 200) {
+        return this.$message.error("删除分类失败！");
+      }
+      this.$message.success("删除分类成功！");
+      this.getCateList();
+    },
   },
 };
 </script>
