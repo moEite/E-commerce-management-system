@@ -76,7 +76,7 @@
       methods: {
         logout() {
           window.sessionStorage.clear()
-          console.log("这是token:" + window.sessionStorage.getItem('token'))
+          // console.log("这是token:" + window.sessionStorage.getItem('token'))
           this.$router.push('/login')
         },
         async getMenuList() {
